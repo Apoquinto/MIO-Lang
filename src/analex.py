@@ -17,6 +17,7 @@ class Analex:
         self.ids = {}
         self.texts = {}
         self.numerics = []
+        self.count = [0]
         self.error = False
 
     # Setter para la direccion
@@ -36,13 +37,18 @@ class Analex:
             # Abre el archivo
             mioFile = open(dirFile)
             # Lee el archivo por lineas de codigo.
+            contadorLinea = 0
             for line in mioFile:
+                contadorLinea += 1
                 # Salta las lineas comentario.
                 if line[0] != '#':
                     # Separa cada linea del codigo y les quita el salto de linea.
                     self.sourceCode.append(line.strip('\n'))
                     # Separa la linea de tokens separados por espacios.
                     self.tokens.append(line.split())
+                    # Realiza la cuenta de los elementos de la linea
+                    #self.count.append(len(line.split())
+            print(self.count)
             # Se cierra el archivo base.
             mioFile.close()
             # Se inicia el proceso de la identificacion de tokens
@@ -59,10 +65,10 @@ class Analex:
                 self.restart()
             # Elimina la posibilidad de que el archivo este vacio
             else:
-                print("El fichero esta vacio :c")
+                print("El fichero se encuentra vacio.")
         # En caso de no existir, avisa al usuario
         except:
-            print("El archivo no existe :c") 
+            print("No se pudo localizar el archivo.") 
 
     # Crea el archivo.lex
     def writeLexFile(self):
@@ -127,6 +133,50 @@ class Analex:
             simFile.write(str(octal) + ',\t' + str(decimal) +'\n')
         # cierra el archivo.
         simFile.close()
+
+     del string
+    def tokenizar(self, line):
+        # Bandera para reconocer si hay un '"'
+        comillaActiva = False
+        # Se le agrega un espacio para que automaticamente el algortimo guarde el ultimo token
+        line += ' '
+        # Este es el constructor de tokens, ira guardando los caracteres hasta que se considere 
+        # que ya no es parte de un token
+        tokenAux = ''
+        # Aqui guardamos los tokens finales de la lista
+        tokens = []
+        # Obtenemos el tama;o de la linea
+        tam = len(line)
+        # recorremos caracter por caracter
+        for i in range(tam):
+            # En caso de que se reconozca que es un texto, se segira otra regla para encontrar el token.
+            if comillaActiva:
+                # Primero buscamos priorizar su final encontrando su pareja.
+                if(line[i] == '"'):
+                    tokenAux += line[i]
+                    comillaActiva = False
+                # Agregamos una excepcion por si al final no existe la pareja
+                elif(tam == i + 1):
+                    tokens.append(tokenAux)                
+                # Por definicion, se debe guardar como token incluso los espacios dentro de las comillas
+                # Por lo que literalmente guardamos todo en nuestro token temporal hasta que encontremos
+                # La pareja, es decir, se cambie 
+                else:
+                    tokenAux += line[i]
+            else:
+                # Si no es ni espacio en blanco ni comilla, entonces se agrega al token actual.
+                if line[i] != ' ' and line[i] != '"':
+                    tokenAux += line[i]
+                # En caso de iniciar una comilla[texto] activa una bandera.
+                elif(line[i] == '"'):
+                    tokenAux += line[i]
+                    comillaActiva = True
+                # Como ya sabemos que tiene que ser un espacio en blanco, agregamos el token actual 
+                # a los tokens de la linea y reiniciamos el token actual
+                else:
+                    tokens.append(tokenAux)
+                    tokenAux = ''
+        return tokens
 
     # Esta funcion verifica si un token pertenece al conjunto de palabras del lenguaje.
     def isSyntax(self, token):
