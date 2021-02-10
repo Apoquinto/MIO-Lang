@@ -1,0 +1,9 @@
+# Programa que calcula el factorial de un número
+PROGRAMA factorial
+VAL = 823
+VAL2 = 82
+IMPRIME "Factorial de "
+IMPRIME Num
+IMPRIME " es "
+IMPRIME VarX
+FINPROG

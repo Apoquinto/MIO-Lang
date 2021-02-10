@@ -42,13 +42,12 @@ class Analex:
                 contadorLinea += 1
                 # Salta las lineas comentario.
                 if line[0] != '#':
-                    # Separa cada linea del codigo y les quita el salto de linea.
-                    self.sourceCode.append(line.strip('\n'))
                     # Separa la linea de tokens separados por espacios.
-                    self.tokens.append(line.split())
+                    self.tokens.append(self.tokenizar(line.strip('\n')))
+                    print(self.tokenizar(line.strip('\n')))
+                    print(line.split()) 
                     # Realiza la cuenta de los elementos de la linea
                     #self.count.append(len(line.split())
-            print(self.count)
             # Se cierra el archivo base.
             mioFile.close()
             # Se inicia el proceso de la identificacion de tokens
@@ -134,7 +133,8 @@ class Analex:
         # cierra el archivo.
         simFile.close()
 
-     del string
+    # Recibe un string de elementos
+    # Devuelve los tokens del string
     def tokenizar(self, line):
         # Bandera para reconocer si hay un '"'
         comillaActiva = False
@@ -177,7 +177,7 @@ class Analex:
                     tokens.append(tokenAux)
                     tokenAux = ''
         return tokens
-
+    
     # Esta funcion verifica si un token pertenece al conjunto de palabras del lenguaje.
     def isSyntax(self, token):
         return (token in self.reserveds or 
