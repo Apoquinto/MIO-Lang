@@ -157,7 +157,9 @@ class Analex:
                     comillaActiva = False
                 # Agregamos una excepcion por si al final no existe la pareja
                 elif(tam == i + 1):
-                    tokens.append(tokenAux)                
+                    if(tokenAux != ' ' and tokenAux != ''):
+                        tokens.append(tokenAux)
+                        tokenAux = ''              
                 # Por definicion, se debe guardar como token incluso los espacios dentro de las comillas
                 # Por lo que literalmente guardamos todo en nuestro token temporal hasta que encontremos
                 # La pareja, es decir, se cambie 
@@ -174,8 +176,9 @@ class Analex:
                 # Como ya sabemos que tiene que ser un espacio en blanco, agregamos el token actual 
                 # a los tokens de la linea y reiniciamos el token actual
                 else:
-                    tokens.append(tokenAux)
-                    tokenAux = ''
+                    if(tokenAux != ' ' and tokenAux != ''):
+                        tokens.append(tokenAux)
+                        tokenAux = ''
         return tokens
     
     # Esta funcion verifica si un token pertenece al conjunto de palabras del lenguaje.
