@@ -44,8 +44,9 @@ class Analex:
                 if line[0] != '#':
                     # Separa la linea de tokens separados por espacios.
                     self.tokens.append(self.tokenizar(line.strip('\n')))
-                    print(self.tokenizar(line.strip('\n')))
-                    print(line.split()) 
+                    # Prueba para ver la diferencia entre el tokenizar y el split()
+                    # print(self.tokenizar(line.strip('\n')))
+                    # print(line.split()) 
                     # Realiza la cuenta de los elementos de la linea
                     #self.count.append(len(line.split())
             # Se cierra el archivo base.

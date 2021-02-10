@@ -1,4 +1,5 @@
 from src.analex import *
+from src.anasin import *
 
 # Clase de MiCLI, es el centro de comandos de .MIO.
 class PseudoCLI:
@@ -88,7 +89,11 @@ class PseudoCLI:
 
     # Ejecuta Anasin.
     def executeAnasin(self, source):
-        pass
+        # Creacion de la direccion real del archivo
+        dirFile = self.dir + '/' + source[:-4] + '.sim'
+        # Envio de la informacion
+        initAnasin(dirFile)
+        self.success('Ejecutando Anasin')
 
     # Muestra el directorio actual.
     def viewDirectory(self):
