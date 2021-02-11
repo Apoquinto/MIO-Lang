@@ -46,6 +46,11 @@ class Anasin:
             self.sigLine()
             if('[id]' in self.pila.nextToken()):
                 return 1
+                if(self.pila.nextToken() == 'FINPROG'):
+                    return 1
+                else:
+                    self.msgFallo("Falta o es incorrecto el final del programa 'FINPROG'")
+                    return -1
             else:
                 self.msgFallo("No hay identificador para el programa, favor de agregarlo después de la sentencia PROGRAMA.")
                 return -1    
