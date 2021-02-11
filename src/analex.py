@@ -1,4 +1,5 @@
 from io import *
+from src.anasin import *
 import re
 
 # Definicion de la clase Analex
@@ -18,6 +19,7 @@ class Analex:
         self.texts = {}
         self.numerics = []
         self.count = [0]
+        self.anasin = Anasin()
         self.error = False
 
     # Setter para la direccion
@@ -61,6 +63,8 @@ class Analex:
                 self.writeLexFile()
                 # Inicia el proceso de la escritura del archivo .sim
                 self.writeSimFile()
+                # Inicio del anasin
+                self.executeAnasin()
                 # Limpia los datos del archivo anterior
                 self.restart()
             # Elimina la posibilidad de que el archivo este vacio
@@ -68,7 +72,7 @@ class Analex:
                 print("El fichero se encuentra vacio.")
         # En caso de no existir, avisa al usuario
         except:
-            print("No se pudo localizar el archivo.") 
+            print("Error al crear el archivo .lex.") 
 
     # Crea el archivo.lex
     def writeLexFile(self):
@@ -227,3 +231,10 @@ class Analex:
         self.texts.clear()
         self.TXTcount = 0
         self.numerics = []
+
+    # Ejecuta Anasin.
+    def executeAnasin(self):
+        print("Ejecutando Anasin...")
+        dirFile = self.dir + "/" + self.source[:-4] + '.lex'
+        self.anasin.setDirFile(dirFile)
+        self.anasin.iniciarAnasin()
