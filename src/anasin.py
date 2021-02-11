@@ -47,7 +47,10 @@ class Anasin:
             if('[id]' in self.pila.nextToken()):
                 return 1
                 if(self.pila.nextToken() == 'FINPROG'):
-                    return 1
+                    if(self.pila.isEmpty()):
+                        return 1
+                    else:
+                        return -1
                 else:
                     self.msgFallo("Falta o es incorrecto el final del programa 'FINPROG'")
                     return -1
