@@ -36,6 +36,7 @@ class Anasin:
             print(self.error("Compilación fallida."))
         else:
             print(self.success("Compilación exitosa :D."))
+        self.reset()
 
     # Detecta la sentencia PROG
     def PROG(self):
@@ -93,3 +94,6 @@ class Anasin:
 
     def sigLine(self):
         self.countLine += 1
+
+    def reset(self):
+        self.countLine = 0
