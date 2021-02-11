@@ -1,5 +1,4 @@
 from src.analex import *
-from src.anasin import *
 
 # Clase de MiCLI, es el centro de comandos de .MIO.
 class PseudoCLI:
@@ -15,6 +14,7 @@ class PseudoCLI:
     def __init__(self, dir):
         self.dir = dir
         self.analex = Analex()
+        self.anasin = Anasin()
 
     # Este metodo sirve para imprimir la parte inicial del CLI en consola
     # Se le puede agregar varias cosas extra como: 
@@ -35,6 +35,7 @@ class PseudoCLI:
     # Este metodo imprime el mensaje que le envies en color Rojo
     def error(self, msg):
         print(self.FAIL + msg + self.RESET)
+
     def listener(self):
         # Este comando se encarga de imprimir la parte inicial del CLI
         self.printShell()
@@ -52,8 +53,6 @@ class PseudoCLI:
             dir = instruction[1]
             # Inicia el proceso del analex
             self.executeAnalex( dir )
-            # Inicia el proceso del anasin
-            self.executeAnasin( dir )
         # Muesra en consola la direccion actual de MiCLI
         elif(instruction[0] == 'dir'):
             self.viewDirectory()
@@ -80,20 +79,12 @@ class PseudoCLI:
         if(source[-4:] == '.mio' ):
             lexFile = open(source[:-4] + '.lex', 'w+')
             lexFile.close()
-            self.success('Ejecutando Analex')
+            self.success('Ejecutando Analex...')
             self.analex.setDir(self.dir)
             self.analex.setSource(source)
             self.analex.readSourceCode()
         else:
             self.error('El archivo no es un .mio :c')
-
-    # Ejecuta Anasin.
-    def executeAnasin(self, source):
-        # Creacion de la direccion real del archivo
-        dirFile = self.dir + '/' + source[:-4] + '.sim'
-        # Envio de la informacion
-        initAnasin(dirFile)
-        self.success('Ejecutando Anasin')
 
     # Muestra el directorio actual.
     def viewDirectory(self):
