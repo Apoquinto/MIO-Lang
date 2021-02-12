@@ -14,7 +14,7 @@ Como tal todo esta construido con python sin uso de ninguna libreria externa.
 
 - __Analizador Léxico.__ Se busca crear un analizador léxico que permita la identificación de tokens de distinto tipo de un arhivo fuente .mio, como tal se solicita que recopile dicha información en dos archivos, un .lex que contendra como tal un stack para el analizador sintáctico y un .sim que contrendra la tabla de identificadores de los distintos tipos de datos de MIO.
 
-- __Analizador Sintáctico.__ Por último, se debe de tener en cuenta que el programa pueda identificar errores al momento de compilar, actualmente esta parte esta rota.
+- __Analizador Sintáctico.__ Por último, se debe de tener en cuenta que el programa pueda identificar errores al momento de compilar, actualmente esta parte esta bajo testeo, pero por ahora parece que es funcinal.
 
 ## Requerimientos
 Como se mencionó anteriormente, Mio esta construido con python, asi que se necesita tener en la computadora python 3, no se requiere que se utilice un sistema operativo en particular.
