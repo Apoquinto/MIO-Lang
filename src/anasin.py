@@ -68,7 +68,7 @@ class Anasin:
         token = self.pila.top()
         # Compruebo que sea el FINPROGRAM para finalizar la recusion
         # En un principio iba usarlo de return, pero asi se dificultaba validar el mensaje del FINPROG faltante
-        if( token == 'FINPROG' or token == 'FINREP' ):
+        if( token == 'FINPROG' or token == 'FINREP' or token == 'FINSI' ):
             pass
         # Compruebo si es una sentencia valida
         elif('[id]' in token or token in ['SI', 'IMPRIME', 'REPITE', 'LEE']):
@@ -95,8 +95,7 @@ class Anasin:
                         if(self.ELEM()):
                             self.sigLine()
                             self.pila.nextToken()
-                        else:
-                            
+                        else:                            
                             self.msgFallo("Después de un operador aritmetico debe ir un valor o un identificador.")
                 else:
                     self.sigLine()
@@ -135,8 +134,21 @@ class Anasin:
             else:
                 self.sigLine()
                 self.pila.nextToken()
-                self.msgFallo
-
+                self.msgFallo("Después de REPITE favor de colocar un valor o un identificador")
+        # Sentencia S.
+        if(token == 'SI'):
+            self.sigLine()
+            self.COMPARA()
+            if(self.pila.nextToken() == "ENTONCES"):
+                self.SENTS()
+                if(self.pila.top()=='FINSI'):
+                    self.sigLine()
+                    self.pila.nextToken()
+                else:
+                    self.msgFallo("SI no finalizado, favor de poner un FINSI.")
+            else:
+                self.msgFallo("Después de indicar un valor o un identificador se debe de poner la palabra reservada 'ENTONCES'")
+            
     def ELEM(self):
         if( '[id]' in self.pila.top() or '[val]' in self.pila.top() ):
             return True
@@ -144,7 +156,20 @@ class Anasin:
             return False
 
     def COMPARA(self):
-        pass
+        self.sigLine()
+        if('[id]' in self.pila.nextToken()):
+            self.sigLine()
+            if('[op_rel]' in self.pila.nextToken()):
+                if(self.ELEM()):
+                    self.sigLine()
+                    self.pila.nextToken()
+                else:
+                    self.sigLine()
+                    self.msgFallo("El comparador requiere un vakor o un identificador despues de la comparación.")
+            else:
+                self.msgFallo("Falta el operador relacional.")
+        else:
+            self.msgFallo("Para comparar se tiene que usar necesariamente un identificador inicial.")
 
     def msgFallo(self, razon):
         print(self.error("Error: ") + razon + self.warning(" [Linea " + str(self.countLine) + ']'))
