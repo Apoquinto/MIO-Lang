@@ -1,0 +1,10 @@
+# Caso 2
+PROGRAMA ProgramaTesteoMal
+IMPRIME Apoquinto
+TAL = 3 + 2
+REPITE 3 VECES
+Apo = 3 + 2
+SI Apos > 5 ENTONCES 
+SEC = 3 + 2
+JOSE = 3 + 2
+FINPROG

@@ -1,0 +1,8 @@
+# Programa para probar el SI
+PROGRAMA siTest
+SI Apo < 4 ENTONCES
+REPITE 4 VECES
+IMPRIME "yei"
+FINREP
+FINSI
+FINPROG
