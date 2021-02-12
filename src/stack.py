@@ -8,7 +8,10 @@ class Stack:
         return self.items == []
     # Devuelve el elemento en el tope de la pila
     def top(self):
-        return self.items[len(self.items)-1]
+        if(self.isEmpty()):
+            return False
+        else:
+            return self.items[len(self.items)-1]
     # Recupera el token en el tope de la pila y lo elimina de la pila
     def nextToken(self):
         if self.isEmpty():
