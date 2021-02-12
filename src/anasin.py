@@ -32,10 +32,10 @@ class Anasin:
             print("Archivo irreconocible")
         self.pila.invert()
         # Inicio el proceso de recursion para comprobar resultados.
-        if( self.PROG() == -1 ):
-            print(self.error("Compilación fallida."))
-        else:
+        if( self.PROG() ):
             print(self.success("Compilación exitosa :D."))
+        else:
+            print(self.error("Compilación fallida."))
         self.reset()
 
     # Detecta la sentencia PROG
@@ -43,31 +43,48 @@ class Anasin:
         self.sigLine()
         print("Iniciando compilación...")
         self.sigLine()
+        work = True
+        # VErifica que el prograa este iniciado
         if(self.pila.nextToken() == 'PROGRAMA'):
             self.sigLine()
+            # Busca el identificador del programa
             if('[id]' in self.pila.nextToken()):
-                return 1
+                # Inicia el reconocimiento de sentencia
+                self.SENTS()
+                # Por ultimo, realiza la comprobacion de finalizacion
                 if(self.pila.nextToken() == 'FINPROG'):
                     if(self.pila.isEmpty()):
-                        return 1
+                        pass
                     else:
-                        return -1
+                        work = False
                 else:
                     self.msgFallo("Falta o es incorrecto el final del programa 'FINPROG'")
-                    return -1
+                    work = False
             else:
                 self.msgFallo("No hay identificador para el programa, favor de agregarlo después de la sentencia PROGRAMA.")
-                return -1    
+                work = False
         else:
             self.msgFallo("Falta o es incorrecto el inicio del programa 'PROGRAMA'")
-            return -1
+            work = False
+        return work
     
     def SENTS(self):
-        self.pila.nextToken()
+        if( self.pila.top() == 'FINPROG'):
+            pass
+        elif( '[id]' in self.pila.top() ):
+            self.SENT()
+            self.SENTS()
+        else:
+            self.msgFallo("La sentencia no tiene sentido (pendiente redactar un mensaje mas infromativo).")
 
     def SENT(self):
-        pass
-
+        # Comprueba si es una sentencia.
+        if( '[id]' in self.pila.top() or 'SI' in self.pila.top() or 'REPITE' in self.pila.top() or 'IMPRIME' in self.pila.top()):
+            # Elimino el elemento de la pila.
+            self.pila.nextToken()
+        else:
+            self.msgFallo("La sentencia no tiene sentido (pendiente redactar un mensaje mas informativo).")
+    
     def ELEM(self):
         pass
 
