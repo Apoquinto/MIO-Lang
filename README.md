@@ -309,9 +309,9 @@ VAL
 ```
 
 __Caso 4.__ Programa para probar el SI
-# Programa para probar el SI
 Codigo Fuente
 ```
+# Programa para probar el SI
 PROGRAMA siTest
 SI Apo < 4 ENTONCES
 REPITE 4 VECES
