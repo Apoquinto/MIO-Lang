@@ -12,8 +12,8 @@ class Analex:
         self.tokens = []
         self.IDcount = 0
         self.TXTcount = 0
-        self.reserveds = ['PROGRAMA', 'FINPROG', 'SI', 'ENTONCES', 'SINO', 'FINSI', 'REPITE', 'VECES', 'FINREP', 'IMPRIME', 'LEE']
-        self.relationals = ['>', '<', '==', '=']
+        self.reserveds = ['PROGRAMA', 'FINPROG', 'SI', 'ENTONCES', 'SINO', 'FINSI', 'REPITE', 'VECES', 'FINREP', 'IMPRIME', 'LEE', '=']
+        self.relationals = ['>', '<', '==']
         self.aritmetics = ['+', '-', '*', '/']
         self.ids = {}
         self.texts = {}
@@ -93,6 +93,9 @@ class Analex:
                     # Compruebo si es un operador aritmetico.
                     if( token in self.aritmetics ):
                         lexFile.write("[op_ar]" + '\n')
+                    # Comprueba su es un operador relacional.
+                    elif( token in self.relationals ):
+                        lexFile.write("[op_rel]" + '\n')
                     # En el caso contrario, sabemos que se trata de una palabra reservada.
                     else:
                         lexFile.write(token + '\n')
