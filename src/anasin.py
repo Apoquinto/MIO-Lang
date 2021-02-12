@@ -10,9 +10,10 @@ class Anasin:
     # Inicio de datos claves para el analex.
     def __init__(self):    
         self.dirFile = ''
-        self.countLine = 0
+        self.countLine = 1
         # Inicia la pila, definida en la clase pila.py
         self.pila = Stack()
+        self.works = True
 
     # Setter para la direccion
     def setDirFile(self, dir):
@@ -32,7 +33,8 @@ class Anasin:
             print("Archivo irreconocible")
         self.pila.invert()
         # Inicio el proceso de recursion para comprobar resultados.
-        if( self.PROG() ):
+        self.PROG()
+        if( self.works ):
             print(self.success("Compilación exitosa :D."))
         else:
             print(self.error("Compilación fallida."))
@@ -40,10 +42,7 @@ class Anasin:
 
     # Detecta la sentencia PROG
     def PROG(self):
-        self.sigLine()
         print("Iniciando compilación...")
-        self.sigLine()
-        work = True
         # VErifica que el prograa este iniciado
         if(self.pila.nextToken() == 'PROGRAMA'):
             self.sigLine()
@@ -56,43 +55,56 @@ class Anasin:
                     if(self.pila.isEmpty()):
                         pass
                     else:
-                        work = False
+                        self.msgFallo("Quedan elementos despues del FINPROG")
                 else:
                     self.msgFallo("Falta o es incorrecto el final del programa 'FINPROG'")
-                    work = False
             else:
                 self.msgFallo("No hay identificador para el programa, favor de agregarlo después de la sentencia PROGRAMA.")
-                work = False
         else:
             self.msgFallo("Falta o es incorrecto el inicio del programa 'PROGRAMA'")
-            work = False
-        return work
     
     def SENTS(self):
-        if( self.pila.top() == 'FINPROG'):
+        # Guardo el elemento actual de la pila para comparar.
+        token = self.pila.top()
+        # Compruebo que sea el FINPROGRAM para finalizar la recusion
+        # En un principio iba usarlo de return, pero asi se dificultaba validar el mensaje del FINPROG faltante
+        if( token == 'FINPROG'):
             pass
-        elif( '[id]' in self.pila.top() ):
+        # Compruebo si es una sentencia valida
+        elif( '[id]' in token or token in ['SI', 'IMPRIME', 'REPITE', 'LEE'] ):
             self.SENT()
             self.SENTS()
+        # En cualquier otro caso, mando mensaje de error.
         else:
             self.msgFallo("La sentencia no tiene sentido (pendiente redactar un mensaje mas infromativo).")
 
     def SENT(self):
-        # Comprueba si es una sentencia.
-        if( '[id]' in self.pila.top() or 'SI' in self.pila.top() or 'REPITE' in self.pila.top() or 'IMPRIME' in self.pila.top()):
-            # Elimino el elemento de la pila.
+        # Saco el siguiente elemento de la pila
+        token = self.pila.nextToken()
+        # Sentencia LEE
+        if(token == 'LEE'):
+            self.sigLine()
+            if('[id]' not in self.pila.nextToken()):
+                self.msgFallo("La instruccion LEE debe estar seguida de un identificador")
+        # Sentencia IMPRIME
+        if(token == 'IMPRIME'):
+            self.sigLine()
+            if('[txt]' not in self.pila.top() and not self.ELEM()):
+                self.msgFallo("La instruccion IMPRIME debe estar seguida de un texto, un identificador o un valor.")
             self.pila.nextToken()
-        else:
-            self.msgFallo("La sentencia no tiene sentido (pendiente redactar un mensaje mas informativo).")
-    
+
     def ELEM(self):
-        pass
+        if( '[id]' in self.pila.top() or '[val]' in self.pila.top() ):
+            return True
+        else:
+            return False
 
     def COMPARA(self):
         pass
 
     def msgFallo(self, razon):
         print(self.error("Error: ") + razon + self.warning(" [Linea " + str(self.countLine) + ']'))
+        self.works = False
 
     def resultado(self):
         return self.pila.isEmpty()
@@ -113,4 +125,6 @@ class Anasin:
         self.countLine += 1
 
     def reset(self):
-        self.countLine = 0
+        self.countLine = 1
+        self.pila = Stack()
+        self.works = True
