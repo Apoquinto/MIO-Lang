@@ -71,26 +71,45 @@ class Anasin:
         if( token == 'FINPROG'):
             pass
         # Compruebo si es una sentencia valida
-        elif( '[id]' in token or token in ['SI', 'IMPRIME', 'REPITE', 'LEE'] ):
+        elif('[id]' in token or token in ['SI', 'IMPRIME', 'REPITE', 'LEE']):
             self.SENT()
             self.SENTS()
         # En cualquier otro caso, mando mensaje de error.
         else:
-            self.msgFallo("La sentencia no tiene sentido (pendiente redactar un mensaje mas infromativo).")
+            self.pila.nextToken()
+            self.msgFallo("La sentencia no tiene sentido (pendiente redactar un mensaje mas informativo).")
 
     def SENT(self):
         # Saco el siguiente elemento de la pila
+        self.sigLine()
         token = self.pila.nextToken()
+        # Sentencia [ID]
+        if('[id]' in token):
+            self.sigLine()
+            token = self.pila.nextToken()
+            if(token == '='):
+                self.sigLine()
+                if(self.ELEM()):
+                    self.pila.nextToken()
+                    if(self.pila.nextToken() == '[op_ar]'):
+                        pass
+                else:
+                    self.pila.nextToken()
+                    self.msgFallo("Para la asignación se debe tratar de un valor o un identificador.")
+            else:
+                self.msgFallo("Falta el signo de asignación para el [id]")
         # Sentencia LEE
         if(token == 'LEE'):
             self.sigLine()
             if('[id]' not in self.pila.nextToken()):
-                self.msgFallo("La instruccion LEE debe estar seguida de un identificador")
+                self.msgFallo("La instruccion LEE debe estar seguida de un identificador.")
         # Sentencia IMPRIME
         if(token == 'IMPRIME'):
             self.sigLine()
+            # Compruebo si no es ni un texto y llamo a ELEM a ver si es un ELEM.
             if('[txt]' not in self.pila.top() and not self.ELEM()):
                 self.msgFallo("La instruccion IMPRIME debe estar seguida de un texto, un identificador o un valor.")
+            # Elimino el token actual.
             self.pila.nextToken()
 
     def ELEM(self):
