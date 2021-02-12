@@ -92,7 +92,10 @@ class Anasin:
                 if(self.ELEM()):
                     self.pila.nextToken()
                     if(self.pila.nextToken() == '[op_ar]'):
-                        pass
+                        if(self.ELEM()):
+                            self.pila.nextToken()
+                        else:
+                            self.msgFallo("Después de un operador aritmetico debe ir un valor o un identificador.")
                 else:
                     self.pila.nextToken()
                     self.msgFallo("Para la asignación se debe tratar de un valor o un identificador.")
