@@ -68,7 +68,7 @@ class Anasin:
         token = self.pila.top()
         # Compruebo que sea el FINPROGRAM para finalizar la recusion
         # En un principio iba usarlo de return, pero asi se dificultaba validar el mensaje del FINPROG faltante
-        if( token == 'FINPROG'):
+        if( token == 'FINPROG' or token == 'FINREP' ):
             pass
         # Compruebo si es una sentencia valida
         elif('[id]' in token or token in ['SI', 'IMPRIME', 'REPITE', 'LEE']):
@@ -93,10 +93,13 @@ class Anasin:
                     self.pila.nextToken()
                     if(self.pila.nextToken() == '[op_ar]'):
                         if(self.ELEM()):
+                            self.sigLine()
                             self.pila.nextToken()
                         else:
+                            
                             self.msgFallo("Después de un operador aritmetico debe ir un valor o un identificador.")
                 else:
+                    self.sigLine()
                     self.pila.nextToken()
                     self.msgFallo("Para la asignación se debe tratar de un valor o un identificador.")
             else:
@@ -114,6 +117,25 @@ class Anasin:
                 self.msgFallo("La instruccion IMPRIME debe estar seguida de un texto, un identificador o un valor.")
             # Elimino el token actual.
             self.pila.nextToken()
+        # Sentencia REPITE
+        if(token == 'REPITE'):
+            self.sigLine()
+            if(self.ELEM()):
+                self.sigLine()
+                self.pila.nextToken()
+                if(self.pila.nextToken() == "VECES"):
+                    self.SENTS()
+                    if(self.pila.top()=='FINREP'):
+                        self.sigLine()
+                        self.pila.nextToken()
+                    else:
+                        self.msgFallo("REPITE VECES no finalizado, favor de poner un FINREP.")
+                else:
+                    self.msgFallo("Después de indicar un valor o un identificador se debe de poner la palabra reservada 'VECES'")
+            else:
+                self.sigLine()
+                self.pila.nextToken()
+                self.msgFallo
 
     def ELEM(self):
         if( '[id]' in self.pila.top() or '[val]' in self.pila.top() ):
