@@ -38,67 +38,194 @@ También puedes usar el comando `\h` para recibir más información sobre lo que
 En caso de que quieras comprobar las pruebas que se han hecho, en la carpeta docs del proyecto hay Jupyter Nootebooks con pruebas individuales para cada una de las partes del proyecto, aunque si quieres ver el código en su máximo esplendor siempre puedes ir a la carpeta src, que es donde esta el código principal hecho en python y comentado.
 
 ## Próximos aditamentos.
-- Arreglar el analizador sintáctico.
 - Se espera que pronto MiCLI pueda hacer operaciones de movimiento entre carpetas-
 - Se espera que pronto se puedan ejecutar comandos MIO en la propia CLI.
 - Se incluirá la opción para crear archivos dentro de MiCLI.
-- Una vez que vuelva el analizador sintáctico, se espera poder hacer una especie de debug, aunque sea solo simulación por que como tal no tenemos analizador semántico, todo por el bien de la práctica académica.
+- Se espera poder hacer una especie de debug, aunque sea solo simulación por que como tal no tenemos analizador semántico, todo por el bien de la práctica académica.
 
 ## Casos de Uso.
 
-__Caso 1.__ Prueba rápida para tokens texto:
-
+__Caso 1.__ Prueba de testeo general
 Código fuente:
 ```
-# Programa de prueba para comprobar tipos de datos.
-PROGRAMA factorial
-VAL = 823
-VAL2 = 82
-IMPRIME "Factorial de "
-IMPRIME Num
-IMPRIME " es "
-IMPRIME VarX
+# Programa de testeo general
+PROGRAMA testeoGeneral
+IMPRIME Apoquinto
+TAL = 3 + 2
+REPITE 3 VECES
+Apo = 3 + 2
+FINREP
+SI Apos > 5 ENTONCES 
+SEC = 3 + 2
+JOSE = 3 + 2
+FINSI
 FINPROG
 ```
+
 Archivo `.lex`
 ```
 PROGRAMA
 [id]ID0
+IMPRIME
 [id]ID1
-=
-[val]
 [id]ID2
 =
 [val]
-IMPRIME
-[txt]TXT0
-IMPRIME
+[op_ar]
+[val]
+REPITE
+[val]
+VECES
 [id]ID3
-IMPRIME
-[txt]TXT1
-IMPRIME
+=
+[val]
+[op_ar]
+[val]
+FINREP
+SI
 [id]ID4
+[op_rel]
+[val]
+ENTONCES
+[id]ID5
+=
+[val]
+[op_ar]
+[val]
+[id]ID6
+=
+[val]
+[op_ar]
+[val]
+FINSI
 FINPROG
 ```
+
 Archivo `.sim`
 ```
 IDS
-factorial,	[id]ID0
-VAL,	[id]ID1
-VAL2,	[id]ID2
-Num,	[id]ID3
-VarX,	[id]ID4
+testeoGeneral,	[id]ID0
+Apoquinto,	[id]ID1
+TAL,	[id]ID2
+Apo,	[id]ID3
+Apos,	[id]ID4
+SEC,	[id]ID5
+JOSE,	[id]ID6
 
 TXT
-"Factorial de ",	[txt]TXT0
-" es ",	[txt]TXT1
 
 VAL
-823,	531
-82,	66
+3,	3
+2,	2
+3,	3
+3,	3
+2,	2
+5,	5
+3,	3
+2,	2
+3,	3
+2,	2
 ```
 
-__Caso 2.__ Factorial.mio
+Output:
+```
+[MIO]~ analex test.mio
+Ejecutando Analex...
+Ejecutando Anasin...
+Iniciando compilación...
+Compilación exitosa :D.
+```
+
+__Caso 2.__ Testeo general pero sin los FIN
+
+```
+# Programa de testeo general pero sin los FIN
+PROGRAMA ProgramaTesteoMal
+IMPRIME Apoquinto
+TAL = 3 + 2
+REPITE 3 VECES
+Apo = 3 + 2
+SI Apos > 5 ENTONCES 
+SEC = 3 + 2
+JOSE = 3 + 2
+FINPROG
+```
+
+Archivo `.lex`
+```
+PROGRAMA
+[id]ID0
+IMPRIME
+[id]ID1
+[id]ID2
+=
+[val]
+[op_ar]
+[val]
+REPITE
+[val]
+VECES
+[id]ID3
+=
+[val]
+[op_ar]
+[val]
+SI
+[id]ID4
+[op_rel]
+[val]
+ENTONCES
+[id]ID5
+=
+[val]
+[op_ar]
+[val]
+[id]ID6
+=
+[val]
+[op_ar]
+[val]
+FINPROG
+```
+
+Archivo `.sim`
+```
+IDS
+ProgramaTesteoMal,	[id]ID0
+Apoquinto,	[id]ID1
+TAL,	[id]ID2
+Apo,	[id]ID3
+Apos,	[id]ID4
+SEC,	[id]ID5
+JOSE,	[id]ID6
+
+TXT
+
+VAL
+3,	3
+2,	2
+3,	3
+3,	3
+2,	2
+5,	5
+3,	3
+2,	2
+3,	3
+2,	2
+```
+
+Output:
+```
+[MIO]~ analex Caso2.mio
+Ejecutando Analex...
+Ejecutando Anasin...
+Iniciando compilación...
+Error: SI no finalizado, favor de poner un FINSI. [Linea 28]
+Error: REPITE VECES no finalizado, favor de poner un FINREP. [Linea 28]
+Compilación fallida.
+```
+
+__Caso 3.__ Factorial.mio
 Código fuente:
 ```
 # Programa que calcula el factorial de un número
@@ -180,11 +307,17 @@ VAL
 0,	0
 1,	1
 ```
-__Caso 3.__ Simple Suma
-Código fuente:
+
+__Caso 4.__ Programa para probar el SI
+# Programa para probar el SI
+Codigo Fuente
 ```
-PROGRAMA onlyAProgram
-X = 5
+PROGRAMA siTest
+SI Apo < 4 ENTONCES
+REPITE 4 VECES
+IMPRIME "yei"
+FINREP
+FINSI
 FINPROG
 ```
 
@@ -192,20 +325,40 @@ Archivo `.lex`
 ```
 PROGRAMA
 [id]ID0
+SI
 [id]ID1
-[op_re]
+[op_rel]
 [val]
+ENTONCES
+REPITE
+[val]
+VECES
+IMPRIME
+[txt]TXT0
+FINREP
+FINSI
 FINPROG
 ```
 
-Archivo `.mio`
+Archivo `.sim`
 ```
 IDS
-onlyAProgram,	[id]ID0
-X,	[id]ID1
+siTest,	[id]ID0
+Apo,	[id]ID1
 
 TXT
+"yei",	[txt]TXT0
 
 VAL
-5,	5
+4,	4
+4,	4
+```
+
+Output
+```
+[MIO]~ analex Caso4.mio
+Ejecutando Analex...
+Ejecutando Anasin...
+Iniciando compilación...
+Compilación exitosa :D.
 ```
